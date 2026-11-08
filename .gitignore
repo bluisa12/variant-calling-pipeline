@@ -1,3 +1,9 @@
+# Secrets: API keys live in .env, which must never be committed.
+# .env.example (no real values) is committed so others know what to set.
+.env
+.env.*
+!.env.example
+
 # Large genomic data: download with scripts/download_data.sh instead of committing
 data/
 results/

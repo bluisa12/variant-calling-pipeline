@@ -12,3 +12,7 @@ dependencies:
   - matplotlib
   - pandas
   - jupyterlab
+  # Optional AI steps
+  - python-dotenv
+  # Tests
+  - pytest

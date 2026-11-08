@@ -24,3 +24,15 @@ threads: 4
 
 # Memory for RTG vcfeval (Java). 2g is plenty for this small region.
 rtg_mem: 2g
+
+# Optional AI steps (off by default, so the core pipeline needs no API key).
+# The API key is NOT set here: it is read from the FREELLMAPI_API_KEY
+# environment variable (see .env.example).
+ai:
+  enabled: false
+  provider: freellmapi
+  base_url: ""        # FreeLLMAPI endpoint, e.g. https://.../v1 (fill in from its docs)
+  model: ""           # exact model name, e.g. a Gemini model; pinned for reproducibility
+  temperature: 0      # 0 = as repeatable as the model allows
+  max_tokens: 1024
+  timeout_seconds: 60

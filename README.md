@@ -86,8 +86,27 @@ workflow/Snakefile              pipeline entry point
 workflow/rules/align.smk        alignment, duplicate marking, alignment QC
 workflow/rules/call.smk         variant calling, normalization, filtering
 workflow/rules/benchmark.smk    comparison against the GIAB truth set, figures
+src/vcp_ai/                     optional AI steps (in progress, see below)
+tests/                          pytest tests (run: python -m pytest)
+.env.example                    template for the API key file (.env is never committed)
 data/  results/                 created locally, not committed to git
 ```
+
+## Optional AI steps (in progress)
+
+An LLM-powered step is being added on top of the pipeline. It is **off by default**:
+the core pipeline never imports it and runs without an API key.
+
+To enable it, put your key in a local `.env` file, which `.gitignore` keeps out of
+version control:
+
+```bash
+cp .env.example .env && chmod 600 .env   # then add your key in a text editor
+```
+
+Then set `ai.enabled: true`, `ai.base_url` and `ai.model` in `config/config.yaml`.
+The key is read only from the `FREELLMAPI_API_KEY` environment variable, never
+from config files, and is kept out of logs and error messages.
 
 ## Results
 
