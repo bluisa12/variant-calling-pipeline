@@ -1,0 +1,21 @@
+# Germline variant calling pipeline
+# Run from the project folder:  snakemake --cores 4
+
+configfile: "config/config.yaml"
+
+SAMPLE = config["sample"]
+
+
+include: "rules/align.smk"
+include: "rules/call.smk"
+
+
+rule all:
+    input:
+        f"results/{SAMPLE}/align/{SAMPLE}.bam",
+        f"results/{SAMPLE}/align/{SAMPLE}.bam.bai",
+        f"results/{SAMPLE}/qc/{SAMPLE}.flagstat.txt",
+        f"results/{SAMPLE}/qc/{SAMPLE}.stats.txt",
+        f"results/{SAMPLE}/qc/{SAMPLE}.coverage.txt",
+        f"results/{SAMPLE}/calls/{SAMPLE}.vcf.gz",
+        f"results/{SAMPLE}/qc/{SAMPLE}.bcftools_stats.txt",

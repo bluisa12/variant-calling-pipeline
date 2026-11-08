@@ -1,0 +1,20 @@
+# Large genomic data: download with scripts/download_data.sh instead of committing
+data/
+results/
+*.bam
+*.bai
+*.cram
+*.fastq.gz
+*.fq.gz
+*.vcf.gz
+*.tbi
+
+# Snakemake
+.snakemake/
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store

@@ -1,0 +1,23 @@
+# Pipeline settings. Change the region here to analyse a different part of the genome.
+
+sample: HG003
+
+# Small slice of chromosome 20 so the pipeline runs on a laptop in minutes.
+chrom: chr20
+region: "chr20:10000000-11000000"
+
+reference: data/reference/chr20.fa
+reads:
+  r1: data/reads/HG003_R1.fastq.gz
+  r2: data/reads/HG003_R2.fastq.gz
+
+# GIAB v4.2.1 benchmark (known-correct variant calls) for scoring our results
+truth_vcf: data/truth/HG003_truth.vcf.gz
+truth_bed: data/truth/HG003_truth.bed
+
+# Variant filters: calls below these get FILTER=LowQual (kept in the VCF, not deleted)
+filters:
+  min_qual: 20     # Phred-scaled call quality (20 = 1% chance the call is wrong)
+  min_depth: 10    # reads covering the position
+
+threads: 4
