@@ -9,5 +9,6 @@ dependencies:
   - samtools=1.25
   - bcftools=1.25
   - rtg-tools=3.13
+  - matplotlib
   - pandas
   - jupyterlab

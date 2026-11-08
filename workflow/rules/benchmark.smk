@@ -56,8 +56,28 @@ rule benchmark_summary:
     input:
         genotype="results/{sample}/benchmark/genotype",
         allele="results/{sample}/benchmark/allele",
+        script="scripts/summarize_benchmark.py",
     output:
         tsv="results/{sample}/benchmark/{sample}.summary.tsv",
         md="results/{sample}/benchmark/{sample}.summary.md",
     shell:
-        "python scripts/summarize_benchmark.py {input.genotype} {input.allele} {output.tsv} {output.md}"
+        "python {input.script} {input.genotype} {input.allele} {output.tsv} {output.md}"
+
+
+rule figures:
+    """README figures (light + dark). Written to docs/ so they are committed to git."""
+    input:
+        summary="results/{sample}/benchmark/{sample}.summary.tsv",
+        genotype="results/{sample}/benchmark/genotype",
+        ref=REF,
+        script="scripts/make_figures.py",
+    output:
+        multiext("docs/figures/{sample}_benchmark", "_light.png", "_dark.png"),
+        multiext("docs/figures/{sample}_indel_context", "_light.png", "_dark.png"),
+    params:
+        region=config["region"],
+    log:
+        "results/{sample}/logs/figures.log",
+    shell:
+        "python {input.script} {input.summary} {input.genotype} {input.ref} "
+        "{params.region} docs/figures/{wildcards.sample}_ > {log} 2>&1"

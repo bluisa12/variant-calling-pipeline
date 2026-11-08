@@ -21,3 +21,4 @@ rule all:
         f"results/{SAMPLE}/calls/{SAMPLE}.vcf.gz",
         f"results/{SAMPLE}/qc/{SAMPLE}.bcftools_stats.txt",
         f"results/{SAMPLE}/benchmark/{SAMPLE}.summary.md",
+        f"docs/figures/{SAMPLE}_benchmark_light.png",

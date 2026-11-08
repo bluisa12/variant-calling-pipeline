@@ -80,7 +80,7 @@ def main() -> None:
         writer.writeheader()
         for match, rows in results.items():
             for t, r in rows.items():
-                writer.writerow({"match": match, "type": t, **{k: round(v, 4) if isinstance(v, float) else v for k, v in r.items()}})
+                writer.writerow({"match": match, "type": t, **{k: round(v, 6) if isinstance(v, float) else v for k, v in r.items()}})
 
     lines = [
         "| Match | Type | Truth variants | TP | FP | FN | Precision | Recall | F1 |",
