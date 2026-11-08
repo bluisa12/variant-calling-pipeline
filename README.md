@@ -22,14 +22,12 @@ reports precision and recall against them instead of just producing a VCF.
 
 ```mermaid
 flowchart LR
-    A[FASTQ reads] --> B[BWA-MEM<br/>alignment]
-    B --> C[Sort and<br/>mark duplicates]
-    C --> D[bcftools<br/>variant calling]
-    D --> E[Normalize<br/>and filter]
-    E --> F[RTG vcfeval<br/>benchmark]
-    T[(GIAB<br/>truth set)] --> F
-    F --> G[Precision, recall, F1<br/>and figures]
-    C -.-> Q[Alignment QC]
+    A[Raw reads] --> B[Align<br/>BWA-MEM]
+    B --> C[Call variants<br/>bcftools]
+    C --> D[Benchmark<br/>RTG vcfeval]
+    T[(GIAB<br/>truth set)] --> D
+    D --> E[Scores<br/>and figures]
+    B -.-> Q[QC report]
 ```
 
 | Step | Tool |
