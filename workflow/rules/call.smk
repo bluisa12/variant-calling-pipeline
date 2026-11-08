@@ -31,7 +31,12 @@ rule normalize_variants:
     """Write every variant in one standard form so it can be compared to the truth set.
 
     The same indel can often be written several ways (left/right-shifted);
-    `norm` left-aligns indels and splits multi-allelic sites into separate rows.
+    `norm` left-aligns indels so they line up with the truth set.
+
+    Multi-allelic sites (two different alternate alleles, genotype 1/2) are kept
+    as one row on purpose. Splitting them into separate rows made the benchmark
+    score each half as wrong: 19 false positives and 5 extra genotype errors that
+    were not real mistakes (see README, "What I learned").
     """
     input:
         vcf="results/{sample}/calls/{sample}.raw.vcf.gz",
@@ -41,7 +46,7 @@ rule normalize_variants:
     log:
         "results/{sample}/logs/normalize_variants.log",
     shell:
-        "bcftools norm -f {input.ref} -m -any -Oz -o {output} {input.vcf} 2> {log}"
+        "bcftools norm -f {input.ref} -m +any -Oz -o {output} {input.vcf} 2> {log}"
 
 
 rule filter_variants:

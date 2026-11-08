@@ -21,3 +21,6 @@ filters:
   min_depth: 10    # reads covering the position
 
 threads: 4
+
+# Memory for RTG vcfeval (Java). 2g is plenty for this small region.
+rtg_mem: 2g

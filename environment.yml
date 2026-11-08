@@ -8,5 +8,6 @@ dependencies:
   - bwa=0.7.19
   - samtools=1.25
   - bcftools=1.25
+  - rtg-tools=3.13
   - pandas
   - jupyterlab

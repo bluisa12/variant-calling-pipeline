@@ -8,6 +8,7 @@ SAMPLE = config["sample"]
 
 include: "rules/align.smk"
 include: "rules/call.smk"
+include: "rules/benchmark.smk"
 
 
 rule all:
@@ -19,3 +20,4 @@ rule all:
         f"results/{SAMPLE}/qc/{SAMPLE}.coverage.txt",
         f"results/{SAMPLE}/calls/{SAMPLE}.vcf.gz",
         f"results/{SAMPLE}/qc/{SAMPLE}.bcftools_stats.txt",
+        f"results/{SAMPLE}/benchmark/{SAMPLE}.summary.md",
