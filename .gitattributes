@@ -1,0 +1,3 @@
+# Tell GitHub's language bar that the workflow files are Snakemake
+workflow/Snakefile linguist-language=Snakemake
+*.smk linguist-language=Snakemake

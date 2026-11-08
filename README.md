@@ -8,8 +8,9 @@ Genome in a Bottle (GIAB) truth set** for sample HG003.
 **98.4% of indels**, with **no false-positive variant alleles**. Getting the genotype
 exactly right is harder for indels (94.4% F1). [Details below.](#benchmark-vs-giab-truth-set)
 
-> **Status:** Core pipeline complete (alignment → calling → benchmarking).
-> Next: a short write-up.
+**Skills shown:** workflow engineering (Snakemake, conda), NGS data processing
+(BWA, samtools, bcftools), benchmarking against a gold standard (RTG vcfeval),
+Python data analysis and visualization, and error analysis.
 
 ## Why this project
 
@@ -19,12 +20,16 @@ reports precision and recall against them instead of just producing a VCF.
 
 ## Pipeline
 
-```
-FASTQ reads ──► BWA-MEM alignment ──► sort / mark duplicates ──► bcftools variant calling
-                                                                      │
-                     GIAB truth set ──► RTG vcfeval benchmark ◄───────┘
-                                                                      │
-                                         precision / recall / F1 by variant type
+```mermaid
+flowchart LR
+    A[FASTQ reads] --> B[BWA-MEM<br/>alignment]
+    B --> C[Sort and<br/>mark duplicates]
+    C --> D[bcftools<br/>variant calling]
+    D --> E[Normalize<br/>and filter]
+    E --> F[RTG vcfeval<br/>benchmark]
+    T[(GIAB<br/>truth set)] --> F
+    F --> G[Precision, recall, F1<br/>and figures]
+    C -.-> Q[Alignment QC]
 ```
 
 | Step | Tool |
@@ -49,17 +54,27 @@ All data is public. To keep run time to a few minutes on a laptop, the pipeline 
 
 ## Quick start
 
+**You'll need:** macOS or Linux, [conda](https://github.com/conda-forge/miniforge)
+(Miniforge recommended), about 1.5 GB of free disk space while downloading, and
+about 15 minutes.
+
 ```bash
-# 1. Create and activate the environment
+# 1. Get the code
+git clone https://github.com/bluisa12/variant-calling-pipeline.git
+cd variant-calling-pipeline
+
+# 2. Create and activate the environment (a few minutes)
 conda env create -f environment.yml
 conda activate variants
 
-# 2. Download the test data (a few minutes)
+# 3. Download the test data (5-15 minutes, depending on your connection)
 bash scripts/download_data.sh
 
-# 3. Run the whole pipeline (about a minute)
+# 4. Run the whole pipeline (about a minute)
 snakemake --cores 4
 ```
+
+Results land in `results/HG003/`, and the figures are regenerated in `docs/figures/`.
 
 ## Project layout
 
@@ -72,8 +87,7 @@ docs/figures/                   generated figures (committed so GitHub can show 
 workflow/Snakefile              pipeline entry point
 workflow/rules/align.smk        alignment, duplicate marking, alignment QC
 workflow/rules/call.smk         variant calling, normalization, filtering
-workflow/rules/benchmark.smk    comparison against the GIAB truth set
-notebooks/                      exploration and figures
+workflow/rules/benchmark.smk    comparison against the GIAB truth set, figures
 data/  results/                 created locally, not committed to git
 ```
 
@@ -161,3 +175,31 @@ separate wrong calls. Keeping those sites as one row changed the results:
 
 None of the calls changed. Only their representation did. Before trusting a
 benchmark number, check what the errors actually are.
+
+## Limitations and next steps
+
+This is a small, deliberately laptop-sized benchmark, so the numbers should be read
+with that in mind:
+
+- **Small region, one sample.** 1 Mb of chr20 for one GIAB sample: 1,694 truth
+  variants, of which only 252 are indels. Indel percentages in particular carry real
+  uncertainty: one more or one fewer error moves indel recall by about 0.4 points.
+- **Slightly easier than a real run.** The reads were taken from an existing
+  whole-chromosome alignment by region. Reads that belong here but were originally
+  placed elsewhere in the genome are missing, which removes some of the mapping
+  ambiguity a true whole-genome run would face.
+- **Only GIAB's confident regions are scored.** The hardest parts of the genome
+  (segmental duplications, large repeats) are excluded from the benchmark by design.
+- **One basic caller.** bcftools is a fast, classical caller and a useful baseline.
+
+Natural extensions:
+
+1. **Compare callers.** Run DeepVariant or GATK HaplotypeCaller on the same reads and
+   benchmark all three side by side. Indels in repeats are where they should differ most.
+2. **Scale up.** Run the whole of chr20 to tighten the indel numbers.
+3. **Tune the filters.** vcfeval already writes ROC data (`-f QUAL`), so plot how
+   precision and recall trade off as the quality threshold changes.
+
+## License
+
+[MIT](LICENSE)
